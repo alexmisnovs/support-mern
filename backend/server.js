@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 4000
 const app = express();
 const version = 'v1'
 
-app.get(`/`, (req, res) => {
+app.get('/', (req, res) => {
   res.status(200).json({message : 'Welcome to Support System API'})
 })
 // User Routes
