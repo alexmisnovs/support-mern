@@ -54,7 +54,7 @@ const loginUser = asyncHandler( async (req, res) => {
   
   const {email, password} = req.body
 
-  const user = await User.findOne({email})
+  const user = await User.findOne({email}).orFail(new Error('User not found'))
  
   // check user and password match
   if(user && (await bcrypt.compare(password, user.password))) {
@@ -69,10 +69,8 @@ const loginUser = asyncHandler( async (req, res) => {
     throw new Error('Invalid credentials')
 
   }
-  
-  //res.send('Login route')
-
 })
+
 // @desc Get current user
 // @route /api/v1/users/me
 // @access Private 
