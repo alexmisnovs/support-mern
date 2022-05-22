@@ -15,6 +15,37 @@ const getTickets = asyncHandler( async (req, res) => {
   res.status(200).json(tickets)
 
 })
+
+// @desc Get ticket
+// @route GET /api/v1/tickets/:id
+// @access Private 
+const getTicket = asyncHandler( async (req, res) => {
+  
+  //Get user from jwt
+  const user = await getUser(req.user.id)
+  //handle mongoose error
+  let ticket
+
+  try {
+     const ticket = await Ticket.findById(req.params.id)
+  } catch (error) {
+     throw new Error('Not recognized')
+  }
+
+  if(!ticket) {
+    res.status(404)
+    throw new Error('Ticket not found')
+  }
+
+  if(ticket.user.toString() !== req.user.id) {
+    res.status(401)
+    throw new Error('Not authorized')
+  }
+
+  res.status(200).json(ticket)
+
+})
+
 // @desc create user ticket
 // @route POST /api/v1/tickets
 // @access Private 
@@ -46,21 +77,61 @@ const createTicket = asyncHandler( async (req, res) => {
 const deleteTicket = asyncHandler( async (req, res) => {
   
   //Get user from jwt
-  const {ticketId} = req.body
 
   // get user to make sure we are authorized to delete
   const user = await getUser(req.user.id)
   //check if user owns this ticket or is admin
-  const ticketToBeDeleted = await Ticket.findById(ticketId)
+  const ticketToBeDeleted = await Ticket.findById(req.params.id)
 
-  const userId = user._id.toString();
-  const ticketUserId = ticketToBeDeleted.user.toString()
   // probably there is a better way.
-  if(userId === ticketUserId){
-    await Ticket.deleteOne(ticketToBeDeleted)
-    return res.status(200).send('deleted')
+  if(req.user.id !== ticketToBeDeleted.user.toString()){
+
+    res.status(401)
+    throw new Error('Not authorized')
+
   }
-  res.status(500).send('something went wrong')
+    await ticketToBeDeleted.remove()
+    res.status(200).json({success: true})
+
+})
+
+
+// @desc Get ticket
+// @route GET /api/v1/tickets/:id
+// @access Private 
+const updateTicket = asyncHandler( async (req, res) => {
+  
+  //Get user from jwt
+  const user = await getUser(req.user.id)
+  //handle mongoose error
+  let ticket
+
+  try {
+      ticket = await Ticket.findById(req.params.id)
+  } catch (error) {
+     throw new Error('Not recognized')
+  }
+
+  if(!ticket) {
+    res.status(404)
+    throw new Error('Ticket not found')
+  }
+
+  if(ticket.user.toString() !== req.user.id) {
+    res.status(401)
+    throw new Error('Not authorized')
+  }
+
+  let updatedTicket
+  try {
+    updatedTicket = await Ticket.findByIdAndUpdate(req.params.id, req.body, {
+    new: true
+  })
+  } catch (error) {
+    throw new Error("Couldn't update ticket")
+  }
+
+  res.status(200).json(updatedTicket)
 
 })
 
@@ -75,5 +146,5 @@ const getUser = async (id) => {
 }
 
 module.exports = {
-  getTickets, createTicket, deleteTicket
+  getTickets, getTicket, createTicket, deleteTicket, updateTicket
 }
