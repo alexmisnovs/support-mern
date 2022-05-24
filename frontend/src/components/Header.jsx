@@ -10,17 +10,22 @@ const Header = () => {
       </div>
       <ul>
         <li>
-          <FaSignInAlt />
-          <Link to="/login">Login</Link>
+          <Link to="/login">
+            {" "}
+            <FaSignInAlt />
+            Login
+          </Link>
         </li>
         <li>
-          <FaUser />
-          <Link to="/register">Register</Link>
+          <Link to="/register">
+            <FaUser />
+            Register
+          </Link>
         </li>
-        <li>
+        {/* <li>
           <FaSignOutAlt />
           <Link to="/logout">Logout</Link>
-        </li>
+        </li> */}
       </ul>
     </header>
   );
