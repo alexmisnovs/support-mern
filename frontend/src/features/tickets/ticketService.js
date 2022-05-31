@@ -16,16 +16,20 @@ const createTicket = async (ticketData, token) => {
 };
 //Login user
 
-const getTicket = async userData => {
-  const response = await axios.post(`${API_URL}/login`, userData);
+const getAll = async token => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL, config);
 
-  console.log(response.data);
   return response.data;
 };
 
 const authService = {
   createTicket,
-  getTicket,
+  getAll,
 };
 
 export default authService;
