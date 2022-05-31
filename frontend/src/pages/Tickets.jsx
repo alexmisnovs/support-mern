@@ -9,7 +9,7 @@ import { BackButton } from "../components/BackButton";
 
 const Tickets = () => {
   const { user } = useSelector(state => state.auth);
-  const { isLoading, isError, isSuccess, message } = useSelector(state => state.ticket);
+  const { isLoading, isError, isSuccess, message, tickets } = useSelector(state => state.ticket);
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -29,7 +29,7 @@ const Tickets = () => {
   }
   return (
     <>
-      <BackButton />
+      <BackButton url="/" />
       Tickets
     </>
   );
