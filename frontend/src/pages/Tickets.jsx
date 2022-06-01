@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 import { toast } from "react-toastify";
 import { getTickets, reset } from "../features/tickets/ticketSlice";
 
@@ -21,12 +20,20 @@ const Tickets = () => {
   }, [dispatch, isSuccess]);
 
   useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
     dispatch(getTickets());
-  }, [dispatch]);
+  }, [dispatch, isError, message]);
 
   if (isLoading) {
     return <Spinner />;
   }
+
+  if (isError) {
+    return <h3>Something went wrong</h3>;
+  }
+
   return (
     <>
       <BackButton url="/" />
@@ -38,7 +45,7 @@ const Tickets = () => {
           <div>Status</div>
         </div>
         {tickets.map(ticket => (
-          <TicketItem key={ticket.id} ticket={ticket} />
+          <TicketItem key={ticket._id} ticket={ticket} />
         ))}
       </div>
     </>

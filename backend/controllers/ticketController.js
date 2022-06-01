@@ -21,13 +21,8 @@ const getTicket = asyncHandler(async (req, res) => {
   //Get user from jwt
   const user = await getUser(req.user.id);
   //handle mongoose error
-  let ticket;
 
-  try {
-    const ticket = await Ticket.findById(req.params.id);
-  } catch (error) {
-    throw new Error("Not recognized");
-  }
+  const ticket = await Ticket.findById(req.params.id);
 
   if (!ticket) {
     res.status(404);
