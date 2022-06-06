@@ -13,11 +13,11 @@ const initialState = {
   message: "",
 };
 
-// Create note
-export const createNote = createAsyncThunk("notes/create", async (ticket, thunkAPI) => {
+// Create a note for a ticket
+export const createNote = createAsyncThunk("notes/create", async (note, thunkAPI) => {
   try {
     const token = thunkAPI.getState().auth.user.token;
-    return await noteService.createNote(ticket, token);
+    return await noteService.createNote(note, token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -26,11 +26,11 @@ export const createNote = createAsyncThunk("notes/create", async (ticket, thunkA
     return thunkAPI.rejectWithValue(message);
   }
 });
-// get user tickets
-export const getNotes = createAsyncThunk("notes/getAll", async (_, thunkAPI) => {
+// get ticket notes
+export const getNotes = createAsyncThunk("notes/getAll", async (ticketId, thunkAPI) => {
   try {
     const token = thunkAPI.getState().auth.user.token;
-    return await noteService.getNotes(token);
+    return await noteService.getNotes(ticketId, token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -67,14 +67,14 @@ export const noteSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      //getTickets cases
+      //getNotes cases
       .addCase(getNotes.pending, state => {
         state.isLoading = true;
       })
       .addCase(getNotes.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.tickets = action.payload;
+        state.notes = action.payload;
       })
       .addCase(getNotes.rejected, (state, action) => {
         state.isLoading = false;

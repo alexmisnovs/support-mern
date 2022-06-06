@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { getTicket, reset, closeTicket } from "../features/tickets/ticketSlice";
+import { getNotes, reset as notesReset } from "../features/notes/noteSlice";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import { BackButton } from "../components/BackButton";
@@ -10,6 +11,7 @@ const Ticket = () => {
   const { ticketId } = useParams();
   const navigate = useNavigate();
   const { isLoading, isError, isSuccess, message, ticket } = useSelector(state => state.ticket);
+  const { isLoading: notesIsLoading, notes } = useSelector(state => state.note);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ const Ticket = () => {
       toast.error(message);
     }
     dispatch(getTicket(ticketId));
+    dispatch(getNotes(ticketId));
     // eslint-disable-next-line
   }, [isError, message, ticketId]);
 
