@@ -4,13 +4,16 @@ const API_URL = "/api/v1/tickets/";
 
 //Create note for a ticket
 
-const createNote = async (noteData, token) => {
+const createNote = async (noteText, ticketId, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.post(API_URL + "/notes", noteData, config);
+  const noteData = {
+    text: noteText,
+  };
+  const response = await axios.post(API_URL + ticketId + "/notes", noteData, config);
 
   return response.data;
 };

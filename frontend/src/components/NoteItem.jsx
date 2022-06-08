@@ -10,7 +10,7 @@ const NoteItem = ({ note }) => {
         color: note.isStaf ? "white" : "gray",
       }}
     >
-      <h4>Note from {note.isStaff ? <span>Staff</span> : user.name}</h4>
+      <h4>Reply from {note.isStaff ? <span>Staff</span> : user.name}</h4>
       <p>{note.text}</p>
       <div className="note-date">{new Date(note.createdAt).toLocaleString("en-GB")}</div>
     </div>
